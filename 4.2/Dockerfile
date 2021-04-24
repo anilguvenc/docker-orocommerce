@@ -35,7 +35,7 @@ USER www-data
 ARG ORO_PLATFORM
 RUN cd /var/www/ && \
     git clone -b 4.2_anil https://github.com/anilguvenc/orocommerce-application.git orocommerce && \
-    composer install --no-interaction --no-suggest --no-dev --prefer-dist --working-dir /var/www/orocommerce && \
+    composer install --ignore-platform-reqs --no-interaction --no-suggest --no-dev --prefer-dist --working-dir /var/www/orocommerce && \
     rm -rf /var/www/orocommerce/.git
 
 USER root
