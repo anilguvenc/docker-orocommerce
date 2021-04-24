@@ -48,9 +48,8 @@ RUN set -eux; \
 
 ARG ORO_PLATFORM
 RUN cd /var/www/ && \
-    git clone -b ${ORO_PLATFORM} https://github.com/oroinc/orocommerce-application.git orocommerce && \
-    composer global require hirak/prestissimo && \
-    composer install --no-interaction --no-suggest --no-dev --prefer-dist --working-dir /var/www/orocommerce && \
+    git clone -b 1.6 https://github.com/oroinc/orocommerce-application.git orocommerce && \
+    composer install --igrone-platform-reqs --no-interaction --no-suggest --no-dev --prefer-dist --working-dir /var/www/orocommerce && \
     rm -rf /var/www/orocommerce/.git && \
     rm -rf /root/.composer && \
     chown www-data:www-data /var/www/orocommerce -R

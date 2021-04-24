@@ -34,8 +34,7 @@ USER www-data
 
 ARG ORO_PLATFORM
 RUN cd /var/www/ && \
-    git clone -b ${ORO_PLATFORM} https://github.com/oroinc/orocommerce-application.git orocommerce && \
-    composer global require hirak/prestissimo && \
+    git clone -b 4.1 https://github.com/oroinc/orocommerce-application.git orocommerce && \
     composer install --no-interaction --no-suggest --no-dev --prefer-dist --working-dir /var/www/orocommerce && \
     rm -rf /var/www/orocommerce/.git
 
