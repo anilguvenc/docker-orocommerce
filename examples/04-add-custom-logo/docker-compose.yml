@@ -1,12 +1,24 @@
 version: '2'
 
 services:
+    postgres:
+        hostname: postgres
+        container_name: postgres_orocommerce
+        image: postgres:9.6
+        volumes:
+            - .docker/db:/var/lib/postgresql/data
+        environment:
+            POSTGRES_DB: orocommerce
+            POSTGRES_PASSWORD: 123456
+        expose:
+            - "5432"
+
     orocommerce:
-        image: okvpn/orocommerce:3.1
-        container_name: orocommerce
-        hostname: orocommerce
+        image: okvpn/orocommerce:4.2
+        container_name: orocommerce5
+        hostname: orocommerce5
         ports:
-            - 127.0.0.1:8080:80
+            - 127.0.0.1:8091:80
         volumes:
             - .docker/attachment:/var/www/orocommerce/var/attachment
             - .docker/media:/var/www/orocommerce/public/media
@@ -14,13 +26,13 @@ services:
             - ./bundles/akuma:/var/www/orocommerce/src/Akuma/Bundle/PahoniaBundle
         environment:
             # installation options
-            APPLICATION_URL: http://127.0.0.1:8080
+            APPLICATION_URL: http://127.0.0.1:8091
             ADMIN_USER: admin
             ADMIN_PASSWORD: admin
 
             ORO_DATABASE_DRIVER: pdo_pgsql
-            ORO_DATABASE_HOST: 172.17.0.1
+            ORO_DATABASE_HOST: postgres
             ORO_DATABASE_PORT: 5432
             ORO_DATABASE_USER: postgres
-            ORO_DATABASE_NAME: orocommerce
+            ORO_DATABASE_NAME: orocommerce5
             ORO_DATABASE_PASSWORD: 123456
