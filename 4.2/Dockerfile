@@ -13,7 +13,7 @@ RUN add-apt-repository ppa:ondrej/php && apt-get update && \
     php7.4-gd php7.4-xmlrpc php7.4-bcmath php7.4-ldap \
     php7.4-xsl php7.4-intl php7.4-soap php7.4-bz2 php7.4-tidy
 
-RUN apt-get install -y --force-yes curl git patch wget sudo
+RUN apt-get install -y --force-yes curl git patch wget sudo nano
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer && \
     curl -sL https://deb.nodesource.com/setup_12.x | bash - && \
@@ -21,35 +21,15 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin -
     chmod +x /usr/bin/composer && \
     mkdir /var/www/ && chown www-data:www-data -R /var/www/
 
-RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
-    echo "deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main" >> /etc/apt/sources.list.d/postgresql.list && \
-    apt-get update && apt-get install -y postgresql-9.6
-
-RUN echo "host all  all    0.0.0.0/0  md5" >> /etc/postgresql/9.6/main/pg_hba.conf
-USER postgres
-RUN /etc/init.d/postgresql start && sleep 10 &&\
-    psql -c "ALTER USER postgres WITH PASSWORD '${PGPASSWORD}'" -d template1
-
 USER www-data
 
 ARG ORO_PLATFORM
 RUN cd /var/www/ && \
-    git clone -b 4.2_anil https://github.com/anilguvenc/orocommerce-application.git orocommerce && \
-    composer install --ignore-platform-reqs --no-interaction --no-suggest --no-dev --prefer-dist --working-dir /var/www/orocommerce && \
-    rm -rf /var/www/orocommerce/.git
+    git clone -b 4.2_anil https://github.com/anilguvenc/orocommerce-application.git orocommerce 
 
 USER root
 WORKDIR /var/www/orocommerce
 ENV HOME=/var/www/
-# Create a fake database
-RUN set -eux; \
-    /etc/init.d/postgresql start; sleep 15;\
-    psql -U postgres -h 127.0.0.1 -c "CREATE DATABASE test;"; \
-    psql -U postgres -h 127.0.0.1 -d test -c 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp";'; \
-    find config -type f -name 'parameters.yml' \
-        -exec sed -i "s/database_driver"\:".*/database_driver"\:" pdo_pgsql/g; s/database_name"\:".*/database_name"\:" test/g; s/database_user"\:".*/database_user"\:" postgres/g; s/database_password"\:".*/database_password"\:" postgres/g;" {} \; ;\
-    sudo -u www-data php bin/console oro:assets:install --env=prod --timeout=1800 --symlink; \
-    rm -rf var/cache/* var/logs/* vendor/oro/platform/build/node_modules
 
 # Main stages
 FROM php:7.4-fpm-alpine
@@ -125,5 +105,7 @@ ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 
 EXPOSE 80
 EXPOSE 8080
+EXPOSE 8000
+EXPOSE 3000
 
 CMD ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisord.conf"]
