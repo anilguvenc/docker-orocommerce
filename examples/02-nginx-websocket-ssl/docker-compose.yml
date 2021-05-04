@@ -14,7 +14,7 @@ services:
             - "5432"
 
     orocommerce:
-        image: okvpn/orocommerce:3.1
+        image: anilguvenc/oro_cluster:1.1
         container_name: orocommerce
         hostname: orocommerce
         ports:
@@ -26,12 +26,12 @@ services:
             - .docker/uploads:/var/www/orocommerce/public/uploads
         environment:
             # installation options
-            APPLICATION_URL: https://orocommerce.companyname.org
+            APPLICATION_URL: https://kablofiyatlistesi.net
             ADMIN_USER: admin
             ADMIN_PASSWORD: admin
-            ADMIN_EMAIL: admin@example.com
-            ADMIN_FIRST_NAME: Alieś
-            ADMIN_LAST_NAME: Zagorski
+            ADMIN_EMAIL: anilguvenc@gmail.com
+            ADMIN_FIRST_NAME: Kablo
+            ADMIN_LAST_NAME: Fiyat
             ORGANIZATION_NAME: Oro
             TRUSTED_PROXIES: 172.16.0.0/12
 
@@ -50,3 +50,6 @@ services:
             # Don't change SECRET after install
             # Must be permanent, because used to encrypt data in database
             ORO_SECRET: 1HYCxPwrHDUPOYupNKsqvoOM5Q
+            
+            
+       
